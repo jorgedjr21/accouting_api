@@ -1,0 +1,48 @@
+require: rubocop-rails
+AllCops:
+  EnabledByDefault: true
+  # Exclude the rails generated files
+  Exclude:
+    - 'spec/rails_helper.rb'
+    - 'spec/spec_helper.rb'
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'bin/**/*'
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'app/channels/application_cable/channel.rb'
+    - 'app/channels/application_cable/connection.rb'
+    - 'app/controllers/application_controller.rb'
+    - 'app/helpers/application_helper.rb'
+    - 'app/jobs/application_job.rb'
+    - 'app/mailers/application_mailer.rb'
+    - 'app/models/application_record.rb'
+    - 'config.ru'
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: false
+# Commonly used screens these days easily fit more than 80 characters.
+Layout/LineLength:
+  Max: 140
+
+# Too short methods lead to extraction of single-use methods, which can make
+# the code easier to read (by naming things), but can also clutter the class
+Metrics/MethodLength: 
+  Max: 20
+
+# The guiding principle of classes is SRP, SRP can't be accurately measured by LoC
+Metrics/ClassLength:
+  Max: 1500
+
+Metrics/BlockLength:
+  Max: 40
+
+# No space makes the method definition shorter and differentiates
+# from a regular assignment.
+Layout/SpaceAroundEqualsInParameterDefault:
+  EnforcedStyle: no_space
+
+Style/MethodCallWithArgsParentheses:
+  Enabled: false
+
+Style/Copyright:
+  Enabled: false
