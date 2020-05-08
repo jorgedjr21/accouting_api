@@ -1,0 +1,28 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment: 
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  accounting_api:
+    build: .
+    image: jorgedjr21/accouting_api:latest
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    environment: 
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - BUNDLE_PATH=/bundle/vendor
+    volumes:
+      - .:/accounting_api
+      - bundle_path:/bundle
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+volumes:
+  bundle_path: # New
+  postgres-data:
