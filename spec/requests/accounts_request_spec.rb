@@ -31,6 +31,11 @@ RSpec.describe 'Accounts', type: :request do
 
           expect(body['account_id']).to eq(expected_id)
         end
+
+        it 'must have http status 201' do
+          post '/accounts', params: valid_params
+          expect(response).to have_http_status(201)
+        end
       end
 
       context 'when id is not informed' do
@@ -50,6 +55,11 @@ RSpec.describe 'Accounts', type: :request do
           body = JSON.parse(response.body)
 
           expect(body['account_id']).not_to be_nil
+        end
+
+        it 'must have http status 201' do
+          post '/accounts', params: valid_params_no_id
+          expect(response).to have_http_status(201)
         end
       end
 
@@ -74,6 +84,11 @@ RSpec.describe 'Accounts', type: :request do
           expect(body['account_id']).to eq(account.id)
           expect(body['auth_token']).to eq(account.auth_token)
         end
+
+        it 'must have http status 200' do
+          post '/accounts', params: params_with_account
+          expect(response).to have_http_status(200)
+        end
       end
     end
 
@@ -94,6 +109,11 @@ RSpec.describe 'Accounts', type: :request do
         body = JSON.parse(response.body)
 
         expect(body).to include('errors')
+      end
+
+      it 'must have http status 400' do
+        post '/accounts', params: invalid_params
+        expect(response).to have_http_status(400)
       end
     end
   end
