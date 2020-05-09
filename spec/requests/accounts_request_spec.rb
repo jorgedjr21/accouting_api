@@ -2,7 +2,52 @@ require 'rails_helper'
 # frozen_string_literal: true
 
 RSpec.describe 'Accounts', type: :request do
-  describe 'POST /create' do
+
+  describe 'GET /accounts/:id/balance' do
+    let!(:account) { create(:account, :with_balance) }
+    let!(:transfer) { create(:transfer, account_id: account.id, amount: 33_00) }
+    context 'with valid params' do
+      let(:valid_params) do
+        {
+          id: account.id
+        }
+      end
+
+      it 'must get the account balance' do
+        get "/accounts/#{account.id}/balance", params: {}, headers: { 'auth-token': account.auth_token }
+        body = JSON.parse(response.body)
+
+        expect(body['balance']).to eq(67.0)
+      end
+
+      it 'must have status 200' do
+        get "/accounts/#{account.id}/balance", params: {}, headers: { 'auth-token': account.auth_token }
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'with invalid params' do
+      let(:valid_params) do
+        {
+          id: 500
+        }
+      end
+
+      it 'must show not allow show balance' do
+        get '/accounts/500/balance', params: {}, headers: { 'auth-token': account.auth_token }
+        body = JSON.parse(response.body)
+
+        expect(body['message']).to eq('The auth token provided is not from the requester account')
+      end
+
+      it 'must have status 403' do
+        get '/accounts/500/balance', params: {}, headers: { 'auth-token': account.auth_token }
+
+        expect(response).to have_http_status(403)
+      end
+    end
+  end
+  describe 'POST /accounts' do
     context 'with valid params' do
       let(:valid_params) do
         {

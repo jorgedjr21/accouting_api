@@ -2,7 +2,15 @@
 
 # Handle the accounts requests render json: { errors: new_account.errors }, status: :bad_request
 class AccountsController < ApplicationController
-  before_action :set_account, only: :create
+  before_action :validate_token, only: :balance
+  before_action :set_account
+
+  # GET accounts/:id/balance shows the account balance
+  def balance
+    return render json: { message: "Account doesn't exists, please try again!" }, status: :not_found if @account.blank?
+
+    render json: { account_id: @account.id, balance: @account.balance.to_f / 100 }, status: :ok
+  end
 
   # POST accounts/ create new account
   def create
