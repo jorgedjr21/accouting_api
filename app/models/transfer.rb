@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Represents the Tranfers of accounts
 class Transfer < ApplicationRecord
   belongs_to :account
   validates :account_id, :transaction_type, :amount, presence: true

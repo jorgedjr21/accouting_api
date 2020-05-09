@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Transfers', type: :request do
-  let!(:source_account) { create(:account, balance: 100_000) }
-  let!(:destination_account) { create(:account, balance: 1000) }
+  let!(:source_account) { create(:account, :with_balance) }
+  let!(:destination_account) { create(:account, :with_balance) }
 
   describe 'POST accounts/transfer' do
     context 'with valid params' do
@@ -51,6 +51,32 @@ RSpec.describe 'Transfers', type: :request do
 
       it 'must have status 400' do
         post '/accounts/transfer', params: invalid_params
+        expect(response).to have_http_status(400)
+      end
+    end
+
+    context 'when source-account does not has balance' do
+      let(:transfer_params) do
+        {
+          source_account_id: source_account.id,
+          destination_account_id: destination_account.id,
+          amount: 900_000
+        }
+      end
+
+      it 'must not do the transfers' do
+        expect { post '/accounts/transfer', params: transfer_params }.not_to change(Transfer, :count)
+      end
+
+      it 'must have the balance error message' do
+        post '/accounts/transfer', params: transfer_params
+        body = JSON.parse(response.body)
+
+        expect(body['message']).to eq("The source account #{source_account.id} doesn't has available balance to do this transaction!")
+      end
+
+      it 'must have status 400' do
+        post '/accounts/transfer', params: transfer_params
         expect(response).to have_http_status(400)
       end
     end
