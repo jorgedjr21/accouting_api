@@ -8,13 +8,22 @@ RSpec.describe 'Accounts', type: :request do
         {
           id: rand(1..100),
           name: 'Account',
-          balance: 100
+          amount: 100
         }
       end
 
       context 'when account not exists' do
         it 'must create a new account' do
           expect { post '/accounts', params: valid_params }.to change(Account, :count).by(1)
+        end
+
+        it 'must have the correct amount' do
+          post '/accounts', params: valid_params
+          expect(Account.last.balance).to be(100)
+        end
+
+        it 'must create the initial account transfer' do
+          expect { post '/accounts', params: valid_params }.to change(Transfer, :count).by(1)
         end
 
         it 'must return the new account auth token' do
@@ -42,7 +51,7 @@ RSpec.describe 'Accounts', type: :request do
         let(:valid_params_no_id) do
           {
             name: 'No Id Account',
-            balance: 200
+            amount: 200
           }
         end
 
@@ -69,7 +78,7 @@ RSpec.describe 'Accounts', type: :request do
           {
             id: account.id,
             name: 'teste',
-            balance: 123_456
+            amount: 123_456
           }
         end
 
@@ -96,7 +105,7 @@ RSpec.describe 'Accounts', type: :request do
       let(:invalid_params) do
         {
           name: nil,
-          balance: 'hundred'
+          amount: -100
         }
       end
 
