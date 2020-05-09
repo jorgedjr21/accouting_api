@@ -12,10 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2020_05_08_215634) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "accounts", force: :cascade do |t|
+  create_table "accounts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.integer "balance"
     t.string "auth_token"
@@ -24,7 +21,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_215634) do
     t.index ["auth_token"], name: "index_accounts_on_auth_token", unique: true
   end
 
-  create_table "transfers", force: :cascade do |t|
+  create_table "transfers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "amount"
     t.string "transaction_type", default: "debit"
     t.bigint "account_id"

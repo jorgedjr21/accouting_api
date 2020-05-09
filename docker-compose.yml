@@ -1,19 +1,23 @@
 version: '3'
 services:
   db:
-    image: postgres
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
     environment: 
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - '3306:3306'
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - mysql-db:/var/lib/mysql
   accounting_api:
     build: .
-    image: jorgedjr21/accouting_api:latest
+    image: jorgedjr21/accounting_api:latest
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     environment: 
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_PORT=3306
       - BUNDLE_PATH=/bundle/vendor
     volumes:
       - .:/accounting_api
@@ -25,4 +29,4 @@ services:
 
 volumes:
   bundle_path: # New
-  postgres-data:
+  mysql-db:
