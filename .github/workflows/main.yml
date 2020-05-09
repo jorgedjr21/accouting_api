@@ -22,8 +22,8 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.6.6
-    - name: Install PostgreSQL client
-      run: sudo apt-get install libpq-dev
+    - name: Install MariaDB client
+      run: sudo apt-get install mariadb-client
 
     - name: DB Configuration
       env:
