@@ -3,9 +3,12 @@
 # Account model: represents the bank account
 class Account < ApplicationRecord
   has_secure_token :auth_token
-  has_many :debts, -> { where type: 'debit' }, class_name: 'Transfer', foreign_key: 'account_id', inverse_of: :transfer
-  has_many :credits, -> { where type: 'credit' }, class_name: 'Transfer', foreign_key: 'account_id', inverse_of: :transfer
+  has_many :debts, -> { where transaction_type: 'debit' }, class_name: 'Transfer', foreign_key: 'account_id'
+  has_many :credits, -> { where transaction_type: 'credit' }, class_name: 'Transfer', foreign_key: 'account_id'
 
-  validates :name, :balance, presence: true
-  validates :balance, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :name, presence: true
+
+  def balance
+    (credits.pluck(:amount).map(&:to_i).sum + (debts.pluck(:amount).map(&:to_i).sum * -1))
+  end
 end

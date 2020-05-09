@@ -14,7 +14,6 @@ ActiveRecord::Schema.define(version: 2020_05_08_215634) do
 
   create_table "accounts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.integer "balance"
     t.string "auth_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

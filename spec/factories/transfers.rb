@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :transfer do
     amount { 1 }
-    type { "" }
-    account { nil }
+    transaction_type { 'debit' }
+    association :account
   end
 end
