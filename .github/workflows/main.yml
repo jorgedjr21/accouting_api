@@ -1,0 +1,45 @@
+name: Accounting Api
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mariadb
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+        - 3306:3306 
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby 2.6
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.6.6
+    - name: Install PostgreSQL client
+      run: sudo apt-get install libpq-dev
+
+    - name: DB Configuration
+      env:
+        DB_HOST: localhost
+        DB_USER: root
+        DB_PASSWORD: root
+        RAILS_ENV: test
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        bin/rails db:setup
+    - name: Run tests
+      env:
+        DB_HOST: localhost
+        DB_USER: root
+        DB_PASSWORD: root
+        RAILS_ENV: test
+      run: |
+        bundle exec rspec
