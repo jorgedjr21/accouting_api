@@ -13,7 +13,7 @@ services:
   accounting_api:
     build: .
     image: jorgedjr21/accounting_api:latest
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: sh -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     environment: 
       - DB_USER=root
       - DB_PASSWORD=root
