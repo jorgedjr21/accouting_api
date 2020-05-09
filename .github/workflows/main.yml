@@ -34,7 +34,7 @@ jobs:
         done
     - name: DB Configuration
       env:
-        DB_HOST: mysql
+        DB_HOST: localhost
         DB_USER: root
         DB_PASSWORD: root
         RAILS_ENV: test
@@ -44,7 +44,7 @@ jobs:
         bin/rails db:setup
     - name: Run tests
       env:
-        DB_HOST: mysql
+        DB_HOST: localhost
         DB_USER: root
         DB_PASSWORD: root
         RAILS_ENV: test
