@@ -23,30 +23,26 @@ jobs:
       with:
         ruby-version: 2.6.6
     - name: Install MySQL client
-      run: sudo apt-get install mysql-client
+      run: sudo apt-get install -y mysql-client libmysqlclient-dev
     
-    - name: Verify MariaDB connection
-      env:
-        PORT: ${{ job.services.mariadb.ports[3306] }}
-      run: |
-        while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
-          sleep 1
-        done
     - name: DB Configuration
       env:
         DB_HOST: localhost
         DB_USER: root
         DB_PASSWORD: root
         RAILS_ENV: test
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
         bin/rails db:setup
+
     - name: Run tests
       env:
         DB_HOST: localhost
         DB_USER: root
         DB_PASSWORD: root
         RAILS_ENV: test
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
       run: |
         bundle exec rspec
