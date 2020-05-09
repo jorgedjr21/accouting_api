@@ -1,8 +1,9 @@
 class TransfersController < ApplicationController
+  before_action :validate_token
   before_action :set_accounts, only: :create
 
   def create
-    return handle_transfer_creation if (@source_account.balance - debit_params[:amount].to_i).positive?
+    return handle_transfer_creation if (@source_account.balance - debit_params[:amount].to_i) >= 0
 
     render json: { message: "The source account #{@source_account.id} doesn't has available balance to do this transaction!" }, status: :bad_request
   end

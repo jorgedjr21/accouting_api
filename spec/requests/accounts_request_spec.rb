@@ -104,8 +104,8 @@ RSpec.describe 'Accounts', type: :request do
     context 'with invalid params' do
       let(:invalid_params) do
         {
-          name: nil,
-          amount: -100
+          name: '',
+          amount: nil
         }
       end
 
