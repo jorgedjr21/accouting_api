@@ -8,7 +8,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql
+        image: mariadb:latest
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
@@ -24,10 +24,17 @@ jobs:
         ruby-version: 2.6.6
     - name: Install MySQL client
       run: sudo apt-get install mysql-client
-
+    
+    - name: Verify MariaDB connection
+    env:
+      PORT: ${{ job.services.mariadb.ports[3306] }}
+    run: |
+      while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
+        sleep 1
+      done
     - name: DB Configuration
       env:
-        DB_HOST: localhost
+        DB_HOST: mysql
         DB_USER: root
         DB_PASSWORD: root
         RAILS_ENV: test
@@ -37,7 +44,7 @@ jobs:
         bin/rails db:setup
     - name: Run tests
       env:
-        DB_HOST: localhost
+        DB_HOST: mysql
         DB_USER: root
         DB_PASSWORD: root
         RAILS_ENV: test
