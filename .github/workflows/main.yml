@@ -22,8 +22,8 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.6.6
-    - name: Install MariaDB client
-      run: sudo apt-get install mariadb-client
+    - name: Install MySQL client
+      run: sudo apt-get install mysql-client
 
     - name: DB Configuration
       env:
